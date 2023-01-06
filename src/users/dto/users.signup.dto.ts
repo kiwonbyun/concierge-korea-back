@@ -2,7 +2,6 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   Matches,
   MaxLength,
@@ -30,11 +29,6 @@ export class UserSignupDto {
   @IsOptional()
   @IsString()
   country?: string;
-
-  @IsOptional()
-  @IsString()
-  @IsPhoneNumber(null)
-  phoneNumber?: string;
 
   @IsOptional()
   @IsString()

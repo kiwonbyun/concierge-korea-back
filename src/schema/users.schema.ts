@@ -42,6 +42,7 @@ export class User extends Document {
   profileImg: string;
 
   readonly readOnlyData: {
+    id: string;
     email: string;
     nickname: string;
     country: string;
@@ -54,6 +55,7 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.virtual('readOnlyData').get(function (this: User) {
   return {
+    id: this._id,
     email: this.email,
     nickname: this.nickname,
     country: this.country,
