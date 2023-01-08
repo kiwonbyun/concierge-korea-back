@@ -17,8 +17,8 @@ export class UsersController {
   ) {}
 
   @Post()
-  async signup(@Body() body: UserSignupDto) {
-    return await this.usersService.singUp(body);
+  signup(@Body() body: UserSignupDto) {
+    return this.usersService.singUp(body);
   }
 
   @Post('login')
@@ -29,17 +29,21 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   getCurrentUser(@CurrentUser() user: User) {
-    console.log(user);
     return user.readOnlyData;
   }
 
   @Put()
-  updateUserInfo(@Body() body: UserUpdateDto) {
-    return body;
+  @UseGuards(JwtAuthGuard)
+  updateUserInfo(@CurrentUser() user: User, @Body() body: UserUpdateDto) {
+    return this.usersService.updateUser(user, body);
   }
 
   @Post('info')
-  updatePassword(@Body() body: UserChangePasswordDto) {
-    return body;
+  @UseGuards(JwtAuthGuard)
+  changePassword(
+    @CurrentUser() user: User,
+    @Body() body: UserChangePasswordDto,
+  ) {
+    return this.usersService.changePassword(user, body);
   }
 }

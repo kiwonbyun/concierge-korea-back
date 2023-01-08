@@ -1,4 +1,4 @@
-import { IsOptional, IsPhoneNumber, IsString, Matches } from 'class-validator';
+import { IsOptional, IsString, Matches } from 'class-validator';
 
 export class UserUpdateDto {
   @IsString()
@@ -6,16 +6,15 @@ export class UserUpdateDto {
   @Matches(/^[a-zA-Z0-9]+$/g, {
     message: 'nickname should consist of letter and digits',
   })
-  nickname?: string;
+  nickname: string;
 
-  @IsOptional()
   @IsString()
-  country?: string;
+  country: string;
 
-  @IsOptional()
-  @IsString()
-  @IsPhoneNumber(null)
-  phoneNumber?: string;
+  // @IsOptional()
+  // @IsString()
+  // @IsPhoneNumber(null)
+  // phoneNumber?: string;
 
   @IsOptional()
   @IsString()

@@ -1,8 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserSignupDto } from './dto/users.signup.dto';
 import { UsersRepository } from './users.repository';
 
 import * as bcrypt from 'bcrypt';
+import { UserUpdateDto } from './dto/user.update.dto';
+import { User } from 'src/schema/users.schema';
+import { UserChangePasswordDto } from './dto/user.changepw.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,5 +33,40 @@ export class UsersService {
     });
 
     return user.readOnlyData;
+  }
+
+  async updateUser(user: User, body: UserUpdateDto) {
+    const { nickname, country, birth } = body;
+    const currentUser = await this.usersRepository.findUserByIdWithoutPassword(
+      user.id,
+    );
+    currentUser.nickname = nickname;
+    currentUser.country = country;
+    currentUser.birth = birth;
+
+    try {
+      await currentUser.save();
+      return { success: true };
+    } catch (e) {
+      throw new HttpException('db error', 404);
+    }
+  }
+
+  async changePassword(user: User, body: UserChangePasswordDto) {
+    const { before, after } = body;
+    const currentUser = await this.usersRepository.findByEmail(user.email);
+
+    const isValidPassword = await bcrypt.compare(before, currentUser.password);
+
+    if (isValidPassword) {
+      const hashedNewPassword = await bcrypt.hash(after, 8);
+      currentUser.password = hashedNewPassword;
+      await currentUser.save();
+      return { success: true };
+    } else {
+      throw new UnauthorizedException(
+        'Please check the entered information again',
+      );
+    }
   }
 }

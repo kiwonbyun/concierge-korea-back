@@ -16,12 +16,12 @@ export class User extends Document {
   @IsNotEmpty()
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   @IsString()
   @IsNotEmpty()
   password: string;
 
-  @Prop()
+  @Prop({ required: true })
   @IsString()
   @IsNotEmpty()
   nickname: string;
@@ -41,6 +41,11 @@ export class User extends Document {
   @IsString()
   profileImg: string;
 
+  @Prop({
+    default: [],
+  })
+  requestList: string[];
+
   readonly readOnlyData: {
     id: string;
     email: string;
@@ -48,6 +53,7 @@ export class User extends Document {
     country: string;
     birth: string;
     profileImg: string;
+    requestList: string[];
   };
 }
 
@@ -61,5 +67,6 @@ UserSchema.virtual('readOnlyData').get(function (this: User) {
     country: this.country,
     birth: this.birth,
     profileImg: this.profileImg,
+    requestList: this.requestList,
   };
 });
