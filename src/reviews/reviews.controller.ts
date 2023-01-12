@@ -17,7 +17,7 @@ import { User } from 'src/schema/users.schema';
 import { ReviewCreateDto } from './dto/review.create.dto';
 import { ReviewsService } from './reviews.service';
 
-@Controller('api/reviews')
+@Controller('api/review')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
   @Get()
