@@ -32,7 +32,7 @@ export class UsersRepository {
         birth: birth ?? null,
       });
     } catch (e) {
-      throw new HttpException('db error', 404);
+      throw new HttpException('db error', 500);
     }
   }
 
