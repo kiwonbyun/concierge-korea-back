@@ -5,6 +5,18 @@ import { Review, ReviewDocument } from 'src/schema/reviews.schema';
 
 import { ReviewCreateDto } from './dto/review.create.dto';
 
+export class Page<T> {
+  pageSize: number;
+  totalCount: number;
+  totalPage: number;
+  items: T[];
+  constructor(totalCount: number, pageSize: number, items: T[]) {
+    this.pageSize = pageSize;
+    this.totalCount = totalCount;
+    this.totalPage = Math.ceil(totalCount / pageSize);
+    this.items = items;
+  }
+}
 @Injectable()
 export class ReviewsRepository {
   constructor(
@@ -12,8 +24,16 @@ export class ReviewsRepository {
     private readonly reviewModel: Model<ReviewDocument>,
   ) {}
 
-  async getAllReviews() {
-    return await this.reviewModel.find();
+  async getAllReviews(page: number, size: number) {
+    const total = await this.reviewModel.count();
+    if (Math.ceil(total / size) < page) {
+      throw new HttpException('please check query string', 400);
+    }
+    const result = await this.reviewModel
+      .find()
+      .skip((page - 1) * size)
+      .limit(size);
+    return new Page(total, size, result);
   }
 
   async createReview(writer: any, newUrlArr: string[], body: ReviewCreateDto) {

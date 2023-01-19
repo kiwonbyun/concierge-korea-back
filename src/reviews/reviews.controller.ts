@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -21,8 +22,8 @@ import { ReviewsService } from './reviews.service';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
   @Get()
-  getAllReviews() {
-    return this.reviewsService.getAllReviews();
+  getAllReviews(@Query('page') page: number, @Query('size') size: number) {
+    return this.reviewsService.getAllReviews(page, size);
   }
 
   @Post()

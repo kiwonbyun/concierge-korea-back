@@ -1,4 +1,5 @@
 import {
+  HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -17,8 +18,11 @@ export class ReviewsService {
     private readonly awsService: AwsService,
   ) {}
 
-  async getAllReviews() {
-    return await this.reviewsRepository.getAllReviews();
+  async getAllReviews(page: number, size: number) {
+    if (!page || !size) {
+      throw new HttpException('please check params', 400);
+    }
+    return await this.reviewsRepository.getAllReviews(page, size);
   }
 
   async createReview(data: any) {
