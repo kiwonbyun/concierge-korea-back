@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorator/user.decorator';
@@ -24,6 +35,13 @@ export class UsersController {
   @Post('login')
   login(@Body() body: UserLoginDto) {
     return this.authService.jwtLogin(body);
+  }
+
+  @Get('/google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleLogin(@Req() req: Request, @Res() res: Response) {
+    console.log(req);
+    return null;
   }
 
   @Get()
