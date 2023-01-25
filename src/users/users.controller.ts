@@ -15,6 +15,8 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorator/user.decorator';
 import { User } from 'src/schema/users.schema';
 import { UserChangePasswordDto } from './dto/user.changepw.dto';
+import { EmailCheckDto } from './dto/user.email.check.dto';
+import { NicknameCheckDto } from './dto/user.nickname.check.dto';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { UserLoginDto } from './dto/users.login.dto';
 import { UserSignupDto } from './dto/users.signup.dto';
@@ -37,11 +39,27 @@ export class UsersController {
     return this.authService.jwtLogin(body);
   }
 
+  @Get('/google')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin(): Promise<void> {
+    // redirect google login page
+  }
+
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  googleLogin(@Req() req: Request, @Res() res: Response) {
+  googleLoginCallback(@Req() req: Request, @Res() res: Response) {
     console.log(req);
     return null;
+  }
+
+  @Post('/check/email')
+  emailCheck(@Body() body: EmailCheckDto) {
+    return this.usersService.emailCheck(body.email);
+  }
+
+  @Post('/check/nickname')
+  nicknameCheck(@Body() body: NicknameCheckDto) {
+    return this.usersService.nicknameCheck(body.nickname);
   }
 
   @Get()

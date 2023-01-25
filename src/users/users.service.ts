@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { User } from 'src/schema/users.schema';
 import { UserChangePasswordDto } from './dto/user.changepw.dto';
+import { EmailCheckDto } from './dto/user.email.check.dto';
 
 @Injectable()
 export class UsersService {
@@ -68,5 +69,21 @@ export class UsersService {
         'Please check the entered information again',
       );
     }
+  }
+
+  async emailCheck(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    if (user) {
+      return { isUnique: false };
+    }
+    return { isUnique: true };
+  }
+
+  async nicknameCheck(nickname: string) {
+    const user = await this.usersRepository.findByNickname(nickname);
+    if (user) {
+      return { isUnique: false };
+    }
+    return { isUnique: true };
   }
 }
