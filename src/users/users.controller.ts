@@ -48,7 +48,6 @@ export class UsersController {
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Req() req: Request, @Res() res: Response) {
-    console.log(req);
     return null;
   }
 
