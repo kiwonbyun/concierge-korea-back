@@ -10,7 +10,6 @@ import * as bcrypt from 'bcrypt';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { User } from 'src/schema/users.schema';
 import { UserChangePasswordDto } from './dto/user.changepw.dto';
-import { EmailCheckDto } from './dto/user.email.check.dto';
 
 @Injectable()
 export class UsersService {

@@ -22,7 +22,7 @@ export class UserSignupDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(22)
-  @Matches(/^[a-zA-Z0-9]+$/g, {
+  @Matches(/^[a-zA-Z0-9]+$/, {
     message: 'nickname should consist of letter and digits',
   })
   nickname: string;

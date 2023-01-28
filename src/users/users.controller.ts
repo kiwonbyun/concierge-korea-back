@@ -30,8 +30,9 @@ export class UsersController {
   ) {}
 
   @Post()
-  signup(@Body() body: UserSignupDto) {
-    return this.usersService.singUp(body);
+  async signup(@Body() body: UserSignupDto) {
+    await this.usersService.singUp(body);
+    return this.authService.jwtLogin(body);
   }
 
   @Post('login')
