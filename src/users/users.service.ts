@@ -10,10 +10,43 @@ import * as bcrypt from 'bcrypt';
 import { UserUpdateDto } from './dto/user.update.dto';
 import { User } from 'src/schema/users.schema';
 import { UserChangePasswordDto } from './dto/user.changepw.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService,
+  ) {}
+
+  async googleLogin(user: any) {
+    const { name, email, providerId, profileImage } = user;
+
+    const isExist = await this.usersRepository.existByEmail(email);
+
+    if (!isExist) {
+      const password = providerId + name;
+      const hashedPassword = await bcrypt.hash(password, 8);
+      const user = await this.usersRepository.create({
+        email,
+        password: hashedPassword,
+        nickname: email.split('@')[0],
+        profileImg: profileImage,
+      });
+
+      return await this.authService.jwtLogin({
+        email: user.email,
+        password: providerId + name,
+      });
+    } else {
+      const user = await this.usersRepository.findByEmail(email);
+
+      return await this.authService.jwtLogin({
+        email: user.email,
+        password: providerId + name,
+      });
+    }
+  }
 
   async singUp(body: UserSignupDto) {
     const { email, password, nickname, country, birth } = body;

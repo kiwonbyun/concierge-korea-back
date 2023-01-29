@@ -21,7 +21,7 @@ export class UsersRepository {
   }
 
   async create(user: UserSignupDto) {
-    const { email, password, nickname, country, birth } = user;
+    const { email, password, nickname, country, birth, profileImg } = user;
 
     try {
       return await this.userModel.create({
@@ -30,6 +30,9 @@ export class UsersRepository {
         nickname,
         country: country ?? 'global',
         birth: birth ?? null,
+        profileImg:
+          profileImg ??
+          'https://concierge-korea.s3.amazonaws.com/base/defaultProfile.webp',
       });
     } catch (e) {
       throw new HttpException('db error', 500);

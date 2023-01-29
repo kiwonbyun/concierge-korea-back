@@ -17,7 +17,6 @@ export class CommentsService {
   ) {}
 
   async createComment(user: User, body: CommentsCreateDto) {
-    console.log({ user, body });
     const { contents, reviewId } = body;
     const writer = await this.usersRepository.findUserByIdWithoutPassword(
       user.id,

@@ -34,4 +34,8 @@ export class UserSignupDto {
   @IsOptional()
   @IsString()
   birth?: string;
+
+  @IsOptional()
+  @IsString()
+  profileImg?: string;
 }

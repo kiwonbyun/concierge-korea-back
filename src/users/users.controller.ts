@@ -6,6 +6,7 @@ import {
   Put,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -48,9 +49,18 @@ export class UsersController {
 
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  googleLoginCallback(@Req() req: Request, @Res() res: Response) {
-    console.log(req);
-    return null;
+  async googleLoginCallback(@Req() req: Request, @Res() res: Response) {
+    if (!req.user) {
+      throw new UnauthorizedException('No user from google');
+    }
+
+    const result = await this.usersService.googleLogin(req.user);
+
+    if (result) {
+      res.redirect('http://localhost:3000/login/success/' + result.token);
+    } else {
+      res.redirect('http://localhost:3000/login/fail/');
+    }
   }
 
   @Post('/check/email')
