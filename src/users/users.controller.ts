@@ -53,6 +53,7 @@ export class UsersController {
     if (!req.user) {
       throw new UnauthorizedException('No user from google');
     }
+    console.log('hi');
 
     const result = await this.usersService.googleLogin(req.user);
 
