@@ -31,7 +31,7 @@ export class ReviewsRepository {
     }
     const result = await this.reviewModel
       .find()
-      .skip((page - 1) * size)
+      .skip(page * size)
       .limit(size);
     return new Page(total, size, result);
   }

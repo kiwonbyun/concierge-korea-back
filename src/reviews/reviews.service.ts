@@ -19,7 +19,7 @@ export class ReviewsService {
   ) {}
 
   async getAllReviews(page: number, size: number) {
-    if (!page || !size) {
+    if (isNaN(page) || isNaN(size)) {
       throw new HttpException('please check params', 400);
     }
     return await this.reviewsRepository.getAllReviews(page, size);
