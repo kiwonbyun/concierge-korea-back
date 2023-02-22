@@ -19,6 +19,14 @@ export class Chat extends Document {
   @Prop()
   @IsNotEmpty()
   lastTalk: string;
+
+  @Prop()
+  @IsNotEmpty()
+  lastTalker: string;
+
+  @Prop()
+  @IsNotEmpty()
+  ownerImage: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
