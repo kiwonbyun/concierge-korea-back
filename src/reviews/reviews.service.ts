@@ -32,17 +32,17 @@ export class ReviewsService {
     );
 
     const result = await Promise.all(
-      files.map((file: Express.Multer.File) =>
+      files?.map((file: Express.Multer.File) =>
         this.awsService.uploadFileToS3('review_image', file),
       ),
     );
 
-    const newUrlArr = result.map((obj) =>
+    const newUrlArr = result?.map((obj) =>
       this.awsService.getAwsS3FileUrl(obj.key),
     );
     const review = await this.reviewsRepository.createReview(
       writer.readOnlyData,
-      newUrlArr,
+      newUrlArr ?? [],
       body,
     );
     return review;
