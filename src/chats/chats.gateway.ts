@@ -75,7 +75,13 @@ export class ChatsGateway {
       .find({ roomName })
       .sort({ createdAt: 1 });
 
-    return { success: true, payload: previousTalk };
+    const { profileImg } = await this.userModel
+      .findOne({
+        nickname: 'RecommendKoreaTrip',
+      })
+      .select('profileImg');
+
+    return { success: true, payload: { previousTalk, profileImg } };
   }
 
   @SubscribeMessage('message')

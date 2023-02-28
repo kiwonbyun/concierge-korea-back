@@ -31,8 +31,8 @@ export class ReviewsController {
   @UseInterceptors(FilesInterceptor('images'))
   createReview(
     @CurrentUser() user: User,
-    @UploadedFiles() files: Express.Multer.File[],
     @Body() body: ReviewCreateDto,
+    @UploadedFiles() files?: Express.Multer.File[],
   ) {
     return this.reviewsService.createReview({ user, body, files });
   }

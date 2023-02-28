@@ -22,6 +22,5 @@ export class ReviewCreateDto {
   tags?: string;
 
   @IsOptional()
-  @IsString()
-  images?: string[];
+  images?: Express.Multer.File[];
 }
