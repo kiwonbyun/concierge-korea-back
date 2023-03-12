@@ -11,12 +11,14 @@ import { UserUpdateDto } from './dto/user.update.dto';
 import { User } from 'src/schema/users.schema';
 import { UserChangePasswordDto } from './dto/user.changepw.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { AwsService } from 'src/aws.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly authService: AuthService,
+    private readonly awsService: AwsService,
   ) {}
 
   async googleLogin(user: any) {
@@ -68,14 +70,20 @@ export class UsersService {
     return user.readOnlyData;
   }
 
-  async updateUser(user: User, body: UserUpdateDto) {
+  async updateUser(user: User, body: UserUpdateDto, file: Express.Multer.File) {
     const { nickname, country, birth } = body;
+
     const currentUser = await this.usersRepository.findUserByIdWithoutPassword(
       user.id,
     );
+
+    const result = await this.awsService.uploadFileToS3('new_profile', file);
+
+    const newUrl = this.awsService.getAwsS3FileUrl(result.key);
     currentUser.nickname = nickname;
     currentUser.country = country;
     currentUser.birth = birth;
+    currentUser.profileImg = newUrl;
 
     try {
       await currentUser.save();

@@ -7,9 +7,12 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
@@ -82,8 +85,13 @@ export class UsersController {
 
   @Put()
   @UseGuards(JwtAuthGuard)
-  updateUserInfo(@CurrentUser() user: User, @Body() body: UserUpdateDto) {
-    return this.usersService.updateUser(user, body);
+  @UseInterceptors(FileInterceptor('image'))
+  updateUserInfo(
+    @CurrentUser() user: User,
+    @Body() body: UserUpdateDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.usersService.updateUser(user, body, file);
   }
 
   @Post('info')

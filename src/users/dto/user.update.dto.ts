@@ -11,10 +11,8 @@ export class UserUpdateDto {
   @IsString()
   country: string;
 
-  // @IsOptional()
-  // @IsString()
-  // @IsPhoneNumber(null)
-  // phoneNumber?: string;
+  @IsOptional()
+  image?: Express.Multer.File;
 
   @IsOptional()
   @IsString()
