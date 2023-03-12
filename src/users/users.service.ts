@@ -70,20 +70,25 @@ export class UsersService {
     return user.readOnlyData;
   }
 
-  async updateUser(user: User, body: UserUpdateDto, file: Express.Multer.File) {
+  async updateUser(
+    user: User,
+    body: UserUpdateDto,
+    file?: Express.Multer.File,
+  ) {
     const { nickname, country, birth } = body;
 
     const currentUser = await this.usersRepository.findUserByIdWithoutPassword(
       user.id,
     );
-
-    const result = await this.awsService.uploadFileToS3('new_profile', file);
-
-    const newUrl = this.awsService.getAwsS3FileUrl(result.key);
     currentUser.nickname = nickname;
     currentUser.country = country;
     currentUser.birth = birth;
-    currentUser.profileImg = newUrl;
+
+    if (file) {
+      const result = await this.awsService.uploadFileToS3('new_profile', file);
+      const newUrl = this.awsService.getAwsS3FileUrl(result.key);
+      currentUser.profileImg = newUrl;
+    }
 
     try {
       await currentUser.save();
