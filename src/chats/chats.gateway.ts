@@ -16,6 +16,7 @@ interface MessagePayload {
   roomName: string;
   message: string;
   nickname: string;
+  profileImg: string;
 }
 
 @WebSocketGateway({
@@ -44,14 +45,18 @@ export class ChatsGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() userEmail: string,
   ) {
-    const user = await this.userModel.findOne({ email: userEmail });
+    // const user = await this.userModel.findOne({ email: userEmail });
+    const admin = await this.userModel.findOne({
+      nickname: 'RecommendKoreaTrip',
+    });
 
     const newChat = await this.chatsModel.create({
       attendant: ['admin@recommendkt.com', userEmail],
       roomName: socket.id,
-      lastTalk: '',
-      ownerImage: user.profileImg,
-      lastTalker: user.nickname,
+      lastTalk:
+        "Annyeonghaseyo! I'm Chulsoo, your friendly guide to all things Korea. How can I help you today?",
+      ownerImage: admin.profileImg,
+      lastTalker: admin.nickname,
     });
 
     // socket.join(newChat.roomName);
@@ -71,9 +76,13 @@ export class ChatsGateway {
 
     socket.join(targetChat.roomName); // join room
 
-    const previousTalk = await this.talksModel
+    let previousTalk = await this.talksModel
       .find({ roomName })
       .sort({ createdAt: 1 });
+    const initTalkFromAdmin = await this.talksModel.findById(
+      '642035f15d8282d9d85f257a',
+    );
+    previousTalk = [initTalkFromAdmin, ...previousTalk];
 
     const { profileImg } = await this.userModel
       .findOne({
@@ -87,7 +96,7 @@ export class ChatsGateway {
   @SubscribeMessage('message')
   handleMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() { message, roomName, nickname }: MessagePayload,
+    @MessageBody() { message, roomName, nickname, profileImg }: MessagePayload,
   ) {
     // 토크데이터 생성 저장
     const createTalkData = async () => {
@@ -97,7 +106,7 @@ export class ChatsGateway {
     const updateLastTalk = async () => {
       await this.chatsModel.findOneAndUpdate(
         { roomName },
-        { lastTalk: message, lastTalker: nickname },
+        { lastTalk: message, lastTalker: nickname, ownerImage: profileImg },
       );
     };
 
@@ -106,7 +115,6 @@ export class ChatsGateway {
     }
     doSomething();
 
-    console.log(socket.broadcast);
     // 방만든 애 _x0tw_tUM5tjB-NZAAAN
 
     // 나중에 들어온 애 FBxYENcIHNYScvblAAAP

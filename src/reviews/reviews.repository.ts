@@ -7,14 +7,14 @@ import { ReviewCreateDto } from './dto/review.create.dto';
 
 export class Page<T> {
   pageSize: number;
-  totalCount: number;
-  totalPage: number;
+  nextPage: number;
+  hasNextPage: boolean;
   items: T[];
-  constructor(totalCount: number, pageSize: number, items: T[]) {
+  constructor(totalCount: number, pageSize: number, items: T[], page: number) {
     this.pageSize = pageSize;
-    this.totalCount = totalCount;
-    this.totalPage = Math.ceil(totalCount / pageSize);
     this.items = items;
+    this.hasNextPage = Math.ceil(totalCount / pageSize) > page + 1;
+    this.nextPage = this.hasNextPage ? page + 1 : null;
   }
 }
 @Injectable()
@@ -33,7 +33,7 @@ export class ReviewsRepository {
       .find()
       .skip(page * size)
       .limit(size);
-    return new Page(total, size, result);
+    return new Page(total, size, result, page);
   }
 
   async createReview(writer: any, newUrlArr: string[], body: ReviewCreateDto) {
