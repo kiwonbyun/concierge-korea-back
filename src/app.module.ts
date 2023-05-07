@@ -11,8 +11,11 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
+import { HealthController } from './health/health.controller';
 import { ChatsModule } from './chats/chats.module';
 import mongoose from 'mongoose';
+import { TerminusModule } from '@nestjs/terminus';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -23,8 +26,10 @@ import mongoose from 'mongoose';
     AuthModule,
     CommentsModule,
     ChatsModule,
+    TerminusModule,
+    HttpModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule implements NestModule {
