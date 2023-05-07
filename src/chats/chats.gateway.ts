@@ -22,7 +22,7 @@ interface MessagePayload {
 @WebSocketGateway({
   namespace: 'chat',
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: ['https://recommendkoreatrip.com'],
   },
 })
 export class ChatsGateway {
@@ -80,7 +80,7 @@ export class ChatsGateway {
       .find({ roomName })
       .sort({ createdAt: 1 });
     const initTalkFromAdmin = await this.talksModel.findById(
-      '642035f15d8282d9d85f257a',
+      '6456293a76f0ed12e907bc15',
     );
     previousTalk = [initTalkFromAdmin, ...previousTalk];
 

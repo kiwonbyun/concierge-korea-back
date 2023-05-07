@@ -60,9 +60,11 @@ export class UsersController {
     const result = await this.usersService.googleLogin(req.user);
 
     if (result) {
-      res.redirect('http://localhost:3000/login/success/' + result.token);
+      res.redirect(
+        'https://recommendkoreatrip.com/login/success/' + result.token,
+      );
     } else {
-      res.redirect('http://localhost:3000/login/fail/');
+      res.redirect('https://recommendkoreatrip.com/login/fail/');
     }
   }
 
